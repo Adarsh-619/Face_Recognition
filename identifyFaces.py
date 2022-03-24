@@ -1,5 +1,5 @@
 import face_recognition
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 # Loading the known images and getting the face_encodings
 image_of_bill = face_recognition.load_image_file(
@@ -32,6 +32,9 @@ pil_image = Image.fromarray(test_image)
 # Create a ImageDraw instance
 draw = ImageDraw.Draw(pil_image)
 
+# Setting the font size
+font = ImageFont.truetype("arial.ttf", 40)
+
 # Loop through faces in test image
 for(top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
     matches = face_recognition.compare_faces(
@@ -44,14 +47,16 @@ for(top, right, bottom, left), face_encoding in zip(face_locations, face_encodin
         first_match_index = matches.index(True)
         name = known_face_names[first_match_index]
     # Draw Box
-    draw.rectangle(((left, top), (right, bottom)), outline=(0, 0, 0))
+    draw.rectangle(((left, top), (right, bottom)), width=10,
+                   outline=(128, 0, 128))
 
     # Draw Label
     text_width, text_height = draw.textsize(name)
-    draw.rectangle(((left, bottom - text_height - 10),
-                   (right, bottom)), fill=(0, 0, 0), outline=(0, 0, 0))
-    draw.text((left + 6, bottom - text_height - 5),
-              name, fill=(255, 255, 255, 255))
+    draw.rectangle(((left, bottom - text_height - 50),
+                   (right, bottom)), fill=(128, 0, 128), width=11, outline=(128, 0, 128))
+    draw.text((left + 50, bottom - text_height - 40),
+              name, fill=(255, 255, 255, 255), font=font)
+
 
 del draw
 
